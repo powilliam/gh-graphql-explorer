@@ -14,7 +14,12 @@ import {
   TypographyProps,
 } from 'styled-system';
 
-export enum TextVariants {}
+export enum TextVariants {
+  LIGHT = 'ligh',
+  REGULAR = 'regular',
+  MEDIUM = 'medium',
+  BOLD = 'bold',
+}
 
 export interface WithVariant {
   variant?: TextVariants;
@@ -35,6 +40,23 @@ export const Text = styled.Text<TextProps>`
   ${border};
   ${typography};
   ${variant({
-    variants: {},
+    variants: {
+      [TextVariants.LIGHT]: {
+        fontFamily: 'Mulish-Light',
+      },
+      [TextVariants.REGULAR]: {
+        fontFamily: 'Mulish-Regular',
+      },
+      [TextVariants.MEDIUM]: {
+        fontFamily: 'Mulish-Medium',
+      },
+      [TextVariants.BOLD]: {
+        fontFamily: 'Mulish-Bold',
+      },
+    },
   })}
 `;
+
+Text.defaultProps = {
+  variant: TextVariants.REGULAR,
+};
