@@ -87,14 +87,14 @@ export function SearchScreen() {
 
       <Search
         placeholder="Search"
-        selectionColor={colors.onBackground}
+        selectionColor={colors.primary}
         value={login}
         onChangeText={loginSet}
       />
 
       {loading && (
         <Column p="8px 16px" alignItems="center">
-          <ActivityIndicator size="small" color={colors.onBackground} />
+          <ActivityIndicator size="small" color={colors.primary} />
         </Column>
       )}
 
