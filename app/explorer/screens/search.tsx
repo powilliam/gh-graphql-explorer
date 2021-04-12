@@ -1,33 +1,16 @@
-import React, { useState, useCallback } from 'react';
-import { StatusBar, Keyboard } from 'react-native';
-import {
-  useNavigation,
-  useFocusEffect,
-  NavigationProp,
-} from '@react-navigation/native';
-import { gql, useQuery } from '@apollo/client';
+import React, { useState, useEffect, useCallback } from 'react';
+import { StatusBar, ScrollView, ActivityIndicator } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { gql, useLazyQuery } from '@apollo/client';
 import { useTheme } from 'styled-components';
-
-import { ExplorerModuleStackParams } from 'app/explorer/explorer-module';
 
 import { Column } from 'app/shared/components/column';
 import { Search } from 'app/explorer/components/search';
+import { SearchedUser } from 'app/explorer/components/searched-user';
 
 import { dark } from 'app/shared/themes/dark';
 
-interface WithCount {
-  totalCount: number;
-}
-
-export interface User {
-  id: string;
-  name: string;
-  bio: string;
-  avatarUrl: string;
-  followers: WithCount;
-  following: WithCount;
-  repositories: WithCount;
-}
+import { User } from 'app/shared/models/user';
 
 interface SearchUserByLoginResponse {
   user: User;
@@ -55,35 +38,50 @@ const SEARCH_USER_BY_LOGIN = gql`
 
 export function SearchScreen() {
   const { colors } = useTheme();
-  const { navigate } = useNavigation<
-    NavigationProp<ExplorerModuleStackParams>
-  >();
 
+  const [fetchedUsers, fetchedUsersSet] = useState<User[]>([]);
   const [login, loginSet] = useState<string>('');
 
-  const { data, error, loading } = useQuery<SearchUserByLoginResponse>(
-    SEARCH_USER_BY_LOGIN,
-    { variables: { login } },
-  );
+  const [
+    fetch,
+    { data, loading, error },
+  ] = useLazyQuery<SearchUserByLoginResponse>(SEARCH_USER_BY_LOGIN);
+
+  function onDeleteUser(id: string) {
+    fetchedUsersSet(fetchedUsers.filter(it => it.id !== id));
+  }
 
   useFocusEffect(
     useCallback(() => {
-      const keyboardDidHide = Keyboard.addListener('keyboardDidHide', () => {
-        if (error && loading && !data) {
-          return;
-        }
-        loginSet('');
-        navigate('Profile', { user: data!!.user });
-      });
-
-      return () => {
-        keyboardDidHide.remove();
-      };
-    }, [navigate, data, error, loading]),
+      if (!loading && !error && !!data) {
+        fetchedUsersSet(latestState => {
+          if (latestState.includes(data.user)) {
+            return latestState;
+          }
+          return [data?.user, ...latestState];
+        });
+      }
+    }, [data, loading, error]),
   );
 
+  useEffect(() => {
+    if (!login) {
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      fetch({
+        variables: {
+          login,
+        },
+      });
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [login, fetch]);
+
   return (
-    <Column flex={1} alignItems="center" justifyContent="center">
+    <Column as={ScrollView} flex={1}>
       <StatusBar
         backgroundColor={dark.colors.background}
         barStyle="light-content"
@@ -95,6 +93,22 @@ export function SearchScreen() {
         value={login}
         onChangeText={loginSet}
       />
+
+      {loading && (
+        <Column p="8px 16px" alignItems="center">
+          <ActivityIndicator size="small" color={colors.onBackground} />
+        </Column>
+      )}
+
+      {fetchedUsers
+        ?.filter(it => it.name)
+        .map(it => (
+          <SearchedUser
+            key={it.id}
+            data={it}
+            onDelete={() => onDeleteUser(it.id)}
+          />
+        ))}
     </Column>
   );
 }
