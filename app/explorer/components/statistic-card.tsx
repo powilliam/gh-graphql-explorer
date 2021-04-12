@@ -11,7 +11,7 @@ export interface StatisticCardProps {
 export function StatisticCard({ value, label }: StatisticCardProps) {
   return (
     <Column
-      minWidth="120px"
+      maxWidth="120px"
       p="12px"
       py="16px"
       bg="surface"
@@ -26,7 +26,12 @@ export function StatisticCard({ value, label }: StatisticCardProps) {
         {value}
       </Text>
 
-      <Text mt="8px" fontSize="11px" letterSpacing="1.5px" color="onSurface">
+      <Text
+        mt="8px"
+        fontSize="11px"
+        letterSpacing="1.5px"
+        color="onSurface"
+        numberOfLines={1}>
         {label.toUpperCase()}
       </Text>
     </Column>
