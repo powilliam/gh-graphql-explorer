@@ -29,73 +29,63 @@ export function ProfileScreen() {
   const statusBar = useStatusBar();
 
   return (
-    <Column flex={1} justifyContent="space-between">
+    <Column flex={1}>
       <StatusBar {...statusBar} />
 
-      <Column p="16px">
-        <Row justifyContent="space-between">
-          <Column>
-            <Text
-              variant={TextVariants.BOLD}
-              fontSize="21px"
-              letterSpacing="0.15px"
-              color="onBackground">
-              {params.user.name}
-            </Text>
-
-            <Text
-              mt="6px"
-              maxWidth="300px"
-              fontSize="15px"
-              letterSpacing="0.1px"
-              color="onSurface">
-              {params.user.bio}
-            </Text>
-          </Column>
-
-          <Column
-            as={Image}
-            width="32px"
-            height="32px"
-            bg="surface"
-            borderRadius={24}
-            source={{ uri: params.user.avatarUrl }}
-            progressiveRenderingEnabled
-          />
-        </Row>
-
-        <Row mt="24px" justifyContent="space-between">
-          <StatisticCard
-            value={params.user.followers.totalCount}
-            label="followers"
-          />
-          <StatisticCard
-            value={params.user.following.totalCount}
-            label="following"
-          />
-          <StatisticCard
-            value={params.user.followers.totalCount}
-            label="repositories"
-          />
-        </Row>
-      </Column>
-
-      <Column p="16px">
+      <Row
+        pl="8px"
+        pr="16px"
+        py="16px"
+        alignItems="center"
+        justifyContent="space-between">
         <TouchableOpacity onPress={goBack}>
-          <Row alignItems="center">
-            <SVGChevronBackOutline color={colors.onBackground} />
-
-            <Text
-              variant={TextVariants.MEDIUM}
-              ml="12px"
-              color="onBackground"
-              fontSize="15px"
-              letterSpacing="1.25px">
-              RETURN
-            </Text>
-          </Row>
+          <SVGChevronBackOutline color={colors.onBackground} />
         </TouchableOpacity>
+
+        <Column
+          as={Image}
+          width="32px"
+          height="32px"
+          bg="surface"
+          borderRadius={24}
+          source={{ uri: params.user.avatarUrl }}
+          progressiveRenderingEnabled
+        />
+      </Row>
+
+      <Column px="16px" pb="16px">
+        <Text
+          variant={TextVariants.BOLD}
+          fontSize="21px"
+          letterSpacing="0.15px"
+          color="onBackground">
+          {params.user.name}
+        </Text>
+
+        <Text
+          mt="2px"
+          maxWidth="300px"
+          fontSize="15px"
+          letterSpacing="0.1px"
+          color="onSurface">
+          {params.user.bio}
+        </Text>
       </Column>
+
+      <Row px="16px" pt="16px" justifyContent="space-between">
+        <StatisticCard
+          value={params.user.followers.totalCount}
+          label="followers"
+        />
+        <StatisticCard
+          value={params.user.following.totalCount}
+          label="following"
+        />
+        <StatisticCard
+          value={params.user.followers.totalCount}
+          label="repositories"
+        />
+      </Row>
     </Column>
   );
 }
