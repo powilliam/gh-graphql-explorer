@@ -8,9 +8,9 @@ import { Column } from 'app/shared/components/column';
 import { Search } from 'app/explorer/components/search';
 import { SearchedUser } from 'app/explorer/components/searched-user';
 
-import { dark } from 'app/shared/themes/dark';
-
 import { User } from 'app/shared/models/user';
+
+import { useStatusBar } from 'app/shared/hooks/use-status-bar';
 
 interface SearchUserByLoginResponse {
   user: User;
@@ -38,6 +38,7 @@ const SEARCH_USER_BY_LOGIN = gql`
 
 export function SearchScreen() {
   const { colors } = useTheme();
+  const statusBar = useStatusBar();
 
   const [fetchedUsers, fetchedUsersSet] = useState<User[]>([]);
   const [login, loginSet] = useState<string>('');
@@ -82,10 +83,7 @@ export function SearchScreen() {
 
   return (
     <Column as={ScrollView} flex={1}>
-      <StatusBar
-        backgroundColor={dark.colors.background}
-        barStyle="light-content"
-      />
+      <StatusBar {...statusBar} />
 
       <Search
         placeholder="Search"
