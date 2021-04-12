@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useTheme } from 'styled-components';
 
 import { ExplorerModuleStackParams } from 'app/explorer/explorer-module';
 
@@ -22,6 +23,7 @@ export interface SearchedUserProps {
 }
 
 export function SearchedUser({ data, onDelete }: SearchedUserProps) {
+  const { colors } = useTheme();
   const { navigate } = useNavigation<
     NavigationProp<ExplorerModuleStackParams, 'Profile'>
   >();
@@ -70,7 +72,7 @@ export function SearchedUser({ data, onDelete }: SearchedUserProps) {
         </Row>
 
         <TouchableOpacity onPress={onDelete} hitSlop={hitSlop}>
-          <SVGClose />
+          <SVGClose color={colors.onSurface} />
         </TouchableOpacity>
       </Row>
     </TouchableWithoutFeedback>

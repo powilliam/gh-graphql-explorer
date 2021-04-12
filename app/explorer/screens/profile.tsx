@@ -1,10 +1,11 @@
 import React from 'react';
 import { StatusBar, TouchableOpacity, Image } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { useTheme } from 'styled-components';
 
 import { ExplorerModuleStackParams } from 'app/explorer/explorer-module';
 
-import { User } from 'app/explorer/screens/search';
+import { User } from 'app/shared/models/user';
 
 import { Column } from 'app/shared/components/column';
 import { Row } from 'app/shared/components/row';
@@ -13,24 +14,23 @@ import { SVGChevronBackOutline } from 'app/shared/components/icons/chevron-back-
 
 import { StatisticCard } from 'app/explorer/components/statistic-card';
 
-import { dark } from 'app/shared/themes/dark';
+import { useStatusBar } from 'app/shared/hooks/use-status-bar';
 
 export interface ProfileScreenParams {
   user: User;
 }
 
 export function ProfileScreen() {
+  const { colors } = useTheme();
   const { goBack } = useNavigation();
   const { params } = useRoute<
     RouteProp<ExplorerModuleStackParams, 'Profile'>
   >();
+  const statusBar = useStatusBar();
 
   return (
     <Column flex={1} justifyContent="space-between">
-      <StatusBar
-        backgroundColor={dark.colors.background}
-        barStyle="light-content"
-      />
+      <StatusBar {...statusBar} />
 
       <Column p="16px">
         <Row justifyContent="space-between">
@@ -83,7 +83,7 @@ export function ProfileScreen() {
       <Column p="16px">
         <TouchableOpacity onPress={goBack}>
           <Row alignItems="center">
-            <SVGChevronBackOutline />
+            <SVGChevronBackOutline color={colors.onBackground} />
 
             <Text
               variant={TextVariants.MEDIUM}
