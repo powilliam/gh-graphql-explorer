@@ -1,10 +1,9 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-export interface SVGChevronBackOutlineProps {
-  size?: number;
-  color?: string;
-}
+import { IconProps } from 'app/shared/components/icons/icon';
+
+export interface SVGChevronBackOutlineProps extends IconProps {}
 
 export function SVGChevronBackOutline({
   size,
